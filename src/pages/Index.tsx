@@ -45,10 +45,10 @@ export default function Index() {
           </div>
           <div>
             <h1 className="text-base font-bold text-foreground tracking-tight">
-              Landlord Nightmare
+              Landlord Nightmare 😈
             </h1>
             <p className="text-xs text-muted-foreground">
-              AI Legal Agent for German Rental Disputes
+              Your AI-powered legal sidekick for German rental disputes
             </p>
           </div>
         </div>
@@ -58,7 +58,7 @@ export default function Index() {
         {/* Case Selector */}
         <section>
           <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Select a case
+            Pick a scenario — see the magic ✨
           </p>
           <CaseSelector cases={cases} activeId={activeCaseId} onSelect={selectCase} />
         </section>

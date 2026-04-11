@@ -21,9 +21,9 @@ export default function TrackStep({ timeline }: Props) {
       className="space-y-5"
     >
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-foreground">Case Timeline</h3>
+        <h3 className="text-lg font-semibold text-foreground">📅 Your Battle Plan</h3>
         <p className="text-sm text-muted-foreground">
-          n8n tracks deadlines, checks for replies, and auto-escalates if needed.
+          Sit back — n8n watches deadlines, checks for replies, and escalates automatically. We've got your back.
         </p>
       </div>
 
@@ -68,9 +68,9 @@ export default function TrackStep({ timeline }: Props) {
       {/* Architecture note */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: "Agent", desc: "Reasoning & Drafts", emoji: "🧠" },
-          { label: "n8n", desc: "Workflow & Delivery", emoji: "⚙️" },
-          { label: "Evidence", desc: "Full Audit Trail", emoji: "📋" },
+          { label: "AI Agent", desc: "Thinks & writes drafts", emoji: "🧠" },
+          { label: "n8n", desc: "Sends, waits & escalates", emoji: "⚙️" },
+          { label: "Evidence", desc: "Everything on record", emoji: "📋" },
         ].map((layer) => (
           <div
             key={layer.label}

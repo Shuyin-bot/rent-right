@@ -15,9 +15,9 @@ export default function InputStep({ userInput, onNext }: Props) {
       className="space-y-6"
     >
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-foreground">User Input</h3>
+        <h3 className="text-lg font-semibold text-foreground">💬 What happened?</h3>
         <p className="text-sm text-muted-foreground">
-          The tenant describes their situation in plain language.
+          Just tell us your problem — no legal jargon needed, we got you.
         </p>
       </div>
 
@@ -39,7 +39,7 @@ export default function InputStep({ userInput, onNext }: Props) {
         onClick={onNext}
         className="rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground shadow transition hover:opacity-90"
       >
-        Analyze with AI →
+        Let AI do its magic ✨ →
       </button>
     </motion.div>
   );
