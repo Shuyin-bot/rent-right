@@ -16,9 +16,9 @@ export default function DraftStep({ emailDraft, onNext }: Props) {
       className="space-y-5"
     >
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-foreground">Email Draft</h3>
+        <h3 className="text-lg font-semibold text-foreground">📧 Your Email, Ready to Go</h3>
         <p className="text-sm text-muted-foreground">
-          AI generates a legally precise German email. Review before sending.
+          We wrote a proper German legal email for you. Take a look — it's in German because that's what your landlord needs to see.
         </p>
       </div>
 
@@ -50,7 +50,7 @@ export default function DraftStep({ emailDraft, onNext }: Props) {
         onClick={onNext}
         className="rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground shadow transition hover:opacity-90"
       >
-        Review & Approve →
+        Looks good? Let's send it 🚀 →
       </button>
     </motion.div>
   );

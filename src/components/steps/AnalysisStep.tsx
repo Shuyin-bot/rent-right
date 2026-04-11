@@ -24,9 +24,9 @@ export default function AnalysisStep({ analysis, onNext }: Props) {
       className="space-y-5"
     >
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-foreground">AI Analysis</h3>
+        <h3 className="text-lg font-semibold text-foreground">🧠 AI Breakdown</h3>
         <p className="text-sm text-muted-foreground">
-          The agent identifies the case type, legal basis, and recommended action.
+          Our agent digs into the law so you don't have to. Here's what it found:
         </p>
       </div>
 
@@ -45,13 +45,13 @@ export default function AnalysisStep({ analysis, onNext }: Props) {
         <div className="space-y-4 p-5">
           {/* Stage */}
           <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-1">Current Stage</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-1">Where you're at</p>
             <p className="text-sm font-medium text-foreground">{analysis.stage}</p>
           </div>
 
           {/* Legal Basis */}
           <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-2">Legal Basis</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-2">The law is on your side</p>
             <div className="space-y-1.5">
               {analysis.legalBasis.map((law, i) => (
                 <motion.div
@@ -70,7 +70,7 @@ export default function AnalysisStep({ analysis, onNext }: Props) {
 
           {/* Explanation */}
           <div className="rounded-lg bg-info/5 border border-info/20 p-4">
-            <p className="text-xs font-medium text-info mb-1">Why this step?</p>
+            <p className="text-xs font-medium text-info mb-1">💡 Why this step?</p>
             <p className="text-sm leading-relaxed text-foreground">{analysis.explanation}</p>
           </div>
 
@@ -86,7 +86,7 @@ export default function AnalysisStep({ analysis, onNext }: Props) {
         onClick={onNext}
         className="rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground shadow transition hover:opacity-90"
       >
-        Generate Email Draft →
+        Draft the email 📝 →
       </button>
     </motion.div>
   );
