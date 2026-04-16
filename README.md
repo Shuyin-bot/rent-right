@@ -31,21 +31,63 @@ Three pre-loaded demo cases guide users through a 5-step workflow:
 - **React Router v6**, **TanStack Query**
 - **Vitest** + **Testing Library** for tests
 
+## Prerequisites
+
+- **Node.js** v18+ — https://nodejs.org
+- **bun** — https://bun.sh/docs/installation
+- **Python** 3.13+ — https://www.python.org/downloads
+- **uv** — https://docs.astral.sh/uv/getting-started/installation
+- A **Google Cloud** service account key (`gcloud.json`) with Vertex AI access, placed in `backend/`
+
 ## Getting started
 
+**1. Clone the repo**
+
 ```bash
-
-# start frontend
-cd /path/to/rent-right
-bun run dev || npm run dev
-
-# start backend
-cd /path/to/rent-right/backend
-uv run uvicorn app.main:app --reload || uv run python -m app.main
+git clone <repo-url>
+cd rent-right
 ```
 
+**2. Install frontend dependencies**
 
-The app runs at `http://localhost:8080` by default.
+```bash
+bun install
+```
+
+**3. Set up backend**
+
+```bash
+cd backend
+uv sync
+```
+
+Edit `backend/.env`:
+
+```
+GOOGLE_APPLICATION_CREDENTIALS=gcloud.json
+VERTEX_LOCATION=europe-west1
+PROJECT_ID=<your-gcp-project-id>
+
+# Optional — Langfuse tracing
+LANGFUSE_PUBLIC_KEY=
+LANGFUSE_SECRET_KEY=
+LANGFUSE_BASE_URL=https://cloud.langfuse.com
+```
+
+Place your GCP service account key at `backend/gcloud.json`.
+
+**4. Start both services** (two separate terminals)
+
+```bash
+# Terminal 1 — frontend (from project root)
+bun run dev
+
+# Terminal 2 — backend (from backend/)
+cd backend
+uv run uvicorn app.main:app --reload
+```
+
+The app runs at `http://localhost:8080`. The backend API runs at `http://localhost:8000`.
 
 ## Project structure
 
