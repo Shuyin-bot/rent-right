@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { User } from "lucide-react";
+import { User, Loader2 } from "lucide-react";
 
 interface Props {
-  userInput: string;
-  onNext: () => void;
+  defaultInput: string;
+  isLoading: boolean;
+  onSubmit: (userInput: string) => void;
 }
 
-export default function InputStep({ userInput, onNext }: Props) {
+export default function InputStep({ defaultInput, isLoading, onSubmit }: Props) {
+  const [text, setText] = useState(defaultInput);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -28,18 +32,29 @@ export default function InputStep({ userInput, onNext }: Props) {
           </div>
           <span className="text-sm font-medium text-foreground">Tenant</span>
         </div>
-        <div className="rounded-lg bg-muted/50 p-4">
-          <p className="text-sm leading-relaxed text-foreground italic">
-            "{userInput}"
-          </p>
-        </div>
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          rows={4}
+          className="w-full rounded-lg bg-muted/50 p-4 text-sm leading-relaxed text-foreground italic resize-none border-0 outline-none focus:ring-1 focus:ring-primary"
+          placeholder="Describe your situation..."
+          disabled={isLoading}
+        />
       </div>
 
       <button
-        onClick={onNext}
-        className="rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground shadow transition hover:opacity-90"
+        onClick={() => onSubmit(text)}
+        disabled={isLoading || !text.trim()}
+        className="flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground shadow transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Let AI do its magic ✨ →
+        {isLoading ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            AI is thinking...
+          </>
+        ) : (
+          "Let AI do its magic ✨ →"
+        )}
       </button>
     </motion.div>
   );

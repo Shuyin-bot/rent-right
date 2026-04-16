@@ -9,6 +9,7 @@ import AnalysisStep from "@/components/steps/AnalysisStep";
 import DraftStep from "@/components/steps/DraftStep";
 import SendStep from "@/components/steps/SendStep";
 import TrackStep from "@/components/steps/TrackStep";
+import { useChat, type AgentResponse } from "@/hooks/useChat";
 
 const stepOrder: CaseStep[] = ["input", "analysis", "draft", "send", "track"];
 
@@ -16,7 +17,9 @@ export default function Index() {
   const [activeCaseId, setActiveCaseId] = useState(1);
   const [currentStep, setCurrentStep] = useState<CaseStep>("input");
   const [completedSteps, setCompletedSteps] = useState<CaseStep[]>([]);
+  const [agentResult, setAgentResult] = useState<AgentResponse | null>(null);
 
+  const { ask, reset, isLoading, error } = useChat();
   const activeCase = cases.find((c) => c.id === activeCaseId)!;
 
   const goNext = useCallback(() => {
@@ -29,11 +32,51 @@ export default function Index() {
     }
   }, [currentStep]);
 
+  const handleSubmit = useCallback(async (userInput: string) => {
+    const result = await ask(userInput);
+    if (result) {
+      setAgentResult(result);
+      goNext();
+    }
+  }, [ask, goNext]);
+
   const selectCase = useCallback((id: number) => {
     setActiveCaseId(id);
     setCurrentStep("input");
     setCompletedSteps([]);
-  }, []);
+    setAgentResult(null);
+    reset();
+  }, [reset]);
+
+  // Map agent response → AnalysisStep props, falling back to hardcoded case data
+  const analysis = agentResult
+    ? {
+        caseType: agentResult.case_type ?? activeCase.analysis.caseType,
+        stage: activeCase.analysis.stage,
+        legalBasis: agentResult.legal_basis ?? activeCase.analysis.legalBasis,
+        urgency: (agentResult.urgency ?? activeCase.analysis.urgency) as "low" | "medium" | "high",
+        nextAction: activeCase.analysis.nextAction,
+        explanation: agentResult.message ?? activeCase.analysis.explanation,
+      }
+    : activeCase.analysis;
+
+  // Map agent response → DraftStep props, falling back to hardcoded case data
+  const emailDraft = agentResult?.letter_subject
+    ? {
+        subject: agentResult.letter_subject,
+        body: agentResult.letter_body ?? activeCase.emailDraft.body,
+        legalNote: agentResult.legal_note ?? activeCase.emailDraft.legalNote,
+      }
+    : activeCase.emailDraft;
+
+  // Map agent response → TrackStep props, falling back to hardcoded timeline
+  const timeline = agentResult?.timeline
+    ? agentResult.timeline.map((t, i) => ({
+        date: t.split(":")[0]?.trim() ?? `Step ${i + 1}`,
+        event: t.split(":").slice(1).join(":").trim() || t,
+        status: (i === 0 ? "pending" : "upcoming") as "done" | "pending" | "upcoming",
+      }))
+    : activeCase.timeline;
 
   return (
     <div className="min-h-screen bg-background">
@@ -58,7 +101,7 @@ export default function Index() {
         {/* Case Selector */}
         <section>
           <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Pick a scenario — see the magic ✨
+            Pick a scenario — or write your own below ✨
           </p>
           <CaseSelector cases={cases} activeId={activeCaseId} onSelect={selectCase} />
         </section>
@@ -72,21 +115,33 @@ export default function Index() {
           />
         </section>
 
+        {/* Error banner */}
+        {error && (
+          <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            ⚠️ Agent error: {error}. Is the backend running? (`cd backend && uv run python -m app.main`)
+          </div>
+        )}
+
         {/* Step Content */}
         <section className="min-h-[400px]">
           <AnimatePresence mode="wait">
             {currentStep === "input" && (
-              <InputStep key="input" userInput={activeCase.userInput} onNext={goNext} />
+              <InputStep
+                key="input"
+                defaultInput={activeCase.userInput}
+                isLoading={isLoading}
+                onSubmit={handleSubmit}
+              />
             )}
             {currentStep === "analysis" && (
-              <AnalysisStep key="analysis" analysis={activeCase.analysis} onNext={goNext} />
+              <AnalysisStep key="analysis" analysis={analysis} onNext={goNext} />
             )}
             {currentStep === "draft" && (
-              <DraftStep key="draft" emailDraft={activeCase.emailDraft} onNext={goNext} />
+              <DraftStep key="draft" emailDraft={emailDraft} onNext={goNext} />
             )}
             {currentStep === "send" && <SendStep key="send" onNext={goNext} />}
             {currentStep === "track" && (
-              <TrackStep key="track" timeline={activeCase.timeline} />
+              <TrackStep key="track" timeline={timeline} />
             )}
           </AnimatePresence>
         </section>
